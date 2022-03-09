@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import redirect,render
 from .forms import SignupForm
+from django.contrib.auth.views import LoginView
 
 #URLS : URL 접근(메소드상관없이) > 해당 URL에 대한 view호출
 #views : url에 맞게 호출된 view가 사용. 
@@ -15,7 +16,8 @@ def signup(request):
     form = SignupForm(request.POST)
     #signupform의 인스턴스 생성
     if form.is_valid(): 
-      form.save()
+      signed_user = form.save()
+      signed_user.send_welcome_email()
       messages.success(request,"회원가입을 환영합니다")
       
       next_url=request.GET.get('next','/')
