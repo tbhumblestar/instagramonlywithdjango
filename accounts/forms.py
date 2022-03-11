@@ -1,6 +1,6 @@
 from .models import User
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import (UserCreationForm, PasswordChangeForm as AuthPasswordChangeForm)
 
 
 #17:30
@@ -29,12 +29,6 @@ class SignupForm(UserCreationForm):
         raise forms.ValidationError("이미 등록된 이메일 주소입니다.")
     return email
   
-  # #이메일 중복문제
-  # def clean_email(self):
-  #   email = self.cleaned_data.get('email')
-  #   if email:
-
-
 
 # #모델폼. 근데 암호에 알고리즘이 적용X
 # class SignupForm(forms.ModelForm):
@@ -46,3 +40,19 @@ class SignupForm(UserCreationForm):
 # 이렇게 하면 usercreationform이 바로 쓰여짐
 # class SignupForm(UserCreationForm):
 #   pass
+
+class ProfileForm(forms.ModelForm):
+  class Meta:
+    model = User
+    fields = ['avatar','first_name','last_name','website_url','bio','phone_number','gender']
+
+class PasswordChangeForm(AuthPasswordChangeForm):
+   def clean_new_password2(self):
+     old_password = self.cleaned_data.get('old_password')
+     new_password2 = super().clean_new_password2()
+     if old_password == new_password2:
+       raise forms.ValidationError("새 암호는 기존 암호와 다르게!!!!")
+
+
+
+     return new_password2
