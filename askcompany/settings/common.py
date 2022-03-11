@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'bootstrap4',
     'django_pydenticon',
     #Local apps
-    'accounts'
+    'accounts',
+    'instagram',
 ]
 
 MIDDLEWARE = [
