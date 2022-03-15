@@ -15,11 +15,23 @@ class User(AbstractUser):
   bio = models.TextField(blank=True)
   phone_number = models.CharField(validators=[RegexValidator(r"^010-?[0-9]\d{3}-?[0-9]\d{4}")],max_length=13,blank=True)
   
+  follower_set = models.ManyToManyField(
+    "self", blank=True, symmetrical=False,
+    related_name="following_set",
+)
+  #self : user간의 관계니까(팔로우/팔로워 생각해보면 쉬움)
+  #symmetrical : 양방향이 아님.
+  #related_name : 해당 이름의 필드와 관계를 가짐
+  #즉 follower > following의 일방적 관계가 성립됨
+
+  # following_set = models.ManyToManyField("self",blank = True)
+  #follower_set에 symmetrical과 related를 설정해줌으로써, 얘를 더이상 설정해줄 필요가 없음.
+
 
   class GenderChoices(models.TextChoices):
     MAle = "M","남성" #"M"은 실제 DB에 저장되는 값, "남성"은 설명
     FEMALE = "W","여성"
-    THIRD = "MW", "지금은 21세기니까.."
+
   gender = models.CharField(choices=GenderChoices.choices,max_length=2,blank=True)
 
   avatar = models.ImageField(blank=True,upload_to="accounts/avatar/%Y/%m",help_text = "48px * 48px 크기의 png/jpg파일을 업로드 해주세요")

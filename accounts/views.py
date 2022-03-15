@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.shortcuts import redirect,render
+from django.shortcuts import get_object_or_404, redirect,render
 from .forms import SignupForm,ProfileForm,PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -9,6 +9,7 @@ from django.contrib.auth.views import (
 
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
+from .models import User
 
 
 #URLS : URL 접근(메소드상관없이) > 해당 URL에 대한 view호출
@@ -75,3 +76,28 @@ class PasswordChangeView(LoginRequiredMixin,AuthPasswordChangeView):
     return super().form_valid(form)
 
 password_change = PasswordChangeView.as_view()
+
+@login_required
+def user_follow(request,username):
+  follower_user = get_object_or_404(User,username=username,is_active=True)
+  request.user.following_set.add(follower_user)
+  follower_user.follower_set.add(request.user)
+
+  messages.success(request,f'{follower_user}님을 팔로우 했습니다.')
+  redirect_url = request.META.get("HTTP_REFERER", "root")
+  #request의 meta속성 에 있는 http_referer가 있으면 가져오고, 없으면 root.
+  # http_referer는 이전사이트의 주소를 가지고 잇음 
+
+
+  return redirect(redirect_url)
+
+@login_required
+def user_unfollow(request,username):
+  unfollower_user = get_object_or_404(User,username=username,is_active=True)
+
+  request.user.following_set.remove(unfollower_user)
+  unfollower_user.follower_set.remove(request.user)
+
+  messages.success(request,f'{unfollower_user}님을 언팔했습니다.')
+  redirect_url = request.META.get("HTTP_REFERER","root")
+  return redirect(redirect_url)

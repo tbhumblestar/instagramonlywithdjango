@@ -1,0 +1,36 @@
+<div class = "d-flex p-2 mb-1">
+  {% comment %} d-flex:부모는 block으로, 자식들은 inline으로 바꿔줌, 자식들은 인라인으로 바뀌니까 한줄에 나열됨 {% endcomment %}
+  <div class = "mr-2">
+    <img src = "{{user.avatar_url}}" style = "width:48px; height:48px" class = "rounded-circle"/>
+  </div>
+  <div class = "ml-2">
+    {{ user.username }}<br/>
+    <small class = "text-muted">{{ user.name }}<small/>
+  </div>
+</div>
+
+<div class = "card mb-2">
+  <div class = "card-header text-muted">
+    Stories
+  </div>
+  <div class = "card-body text-muted">
+    Stories from people you follow will show up here
+  </div>
+  </div>
+
+<div class = "card mb-2">
+  <div class = "card-header text-muted">
+    Suggestions for you
+  </div>
+  <div class = "card-body text-muted">
+    {% for suggested_user in suggested_user_list %}
+      {% include "instagram/timeline_sidebar_user_follow.html" %}
+    {% empty %}
+      추천 친구가 없습니다.
+
+    {% endfor %}
+    
+
+  </div>
+  </div>
+

@@ -1,0 +1,15 @@
+<div class="d-flex justify-content-around mb-3">
+  <div class="">
+    <img src ="{{ suggested_user.avatar_url }}" style = "width:32px;height:32px;" 
+    class = "rounded-circle" />
+  </div>
+  <div class="">
+    <a href="{% url "instagram:user_page" suggested_user.username %}">
+      {{ suggested_user.username }}
+    </a>
+  </div>
+  <div class="ml-auto">
+    <a href ="{% url "user_follow" suggested_user.username %}">Follow</a>
+    {% comment %} <a href ="{% url "user_unfollow" suggested_user.username %}">UnFollow</a> {% endcomment %}
+  </div>
+</div>
